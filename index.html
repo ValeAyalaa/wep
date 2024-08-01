@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Nieve Roja en A-Frame</title>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <style>
+      .snowflake {
+        position: absolute;
+        width: 2px;
+        height: 2px;
+        background-color: red;
+        opacity: 0.8;
+        border-radius: 50%;
+      }
+    </style>
+  </head>
+  <body>
+    <a-scene>
+      <!-- Cámara -->
+      <a-camera position="0 1.6 4"></a-camera>
+
+      <!-- Luz -->
+      <a-light type="ambient" color="#FFF"></a-light>
+
+      <!-- Nieve -->
+      <a-entity id="snow-container"></a-entity>
+
+      <!-- Cielo -->
+      <a-sky color="#000"></a-sky>
+
+      <script>
+        AFRAME.registerComponent('snow', {
+          schema: {
+            count: {type: 'int', default: 100}
+          },
+          init: function () {
+            const container = document.querySelector('#snow-container');
+            for (let i = 0; i < this.data.count; i++) {
+              const snowflake = document.createElement('a-sphere');
+              snowflake.setAttribute('radius', 0.05);
+              snowflake.setAttribute('color', 'red');
+              snowflake.setAttribute('position', {
+                x: Math.random() * 20 - 10,
+                y: Math.random() * 10 + 10,
+                z: Math.random() * 20 - 10
+              });
+              snowflake.setAttribute('animation', {
+                property: 'position',
+                to: `0 ${-10} 0`, // Cambia a -10 para que caigan hasta el suelo
+                dir: 'alternate',
+                dur: Math.random() * 5000 + 5000, // Duración aleatoria de la animación
+                loop: true
+              });
+              container.appendChild(snowflake);
+            }
+          }
+        });
+
+        document.querySelector('a-scene').setAttribute('snow', { count: 100 });
+      </script>
+    </a-scene>
+  </body>
+</html>
